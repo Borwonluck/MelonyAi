@@ -27,18 +27,19 @@ def get_audio_device():
     return None
 
 # 🗣️ พูดข้อความออกลำโพง (หรือส่งเข้า Virtual Audio Cable)
-def speak(text, device_index=None):
+def speak(text, device_index=None, speed=1.25):
     # สร้างเสียง mp3 จาก gTTS
     tts = gTTS(text=text, lang="th")
     mp3_filename = "melony_voice.mp3"
     wav_filename = "melony_voice.wav"
     tts.save(mp3_filename)
 
-    # แปลง mp3 → wav ด้วย pydub
+    # แปลง mp3 → wav และปรับความเร็ว
     audio = AudioSegment.from_mp3(mp3_filename)
-    audio.export(wav_filename, format="wav")
+    faster_audio = audio.speedup(playback_speed=speed)
+    faster_audio.export(wav_filename, format="wav")
 
-    # เล่นเสียง wav บนอุปกรณ์ที่กำหนด
+    # เล่นเสียง wav
     data, samplerate = sf.read(wav_filename)
     print(f"🔊 Playing on device index: {device_index}")
     sd.play(data, samplerate=samplerate, device=device_index)

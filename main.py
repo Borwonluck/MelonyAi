@@ -1,4 +1,4 @@
-from speech2text import record_audio_enter, recognize_speech
+from speech2text import record_audio_auto, recognize_speech, detect_wake_word
 from chatbot import get_response
 from text2speech import speak, get_audio_device
 
@@ -17,8 +17,10 @@ if device_index is None:
 # 🔁 วนลูปรอรับคำพูดจากวอน
 while True:
     try :
+        # 🎤 ตรวจจับคำว่า "เมโลนี่"
+        detect_wake_word()
         # 🔴 บันทึกเสียงจากไมโครโฟน
-        record_audio_enter()
+        record_audio_auto()
 
         # 📝 ถอดเสียงเป็นข้อความ
         user_input = recognize_speech()
@@ -28,6 +30,7 @@ while True:
 
         if user_input in ["บ๊ายบาย", "ไปก่อนนะ"]:
             print("👋 แล้วเจอกันใหม่นะเมี๊ยว~")
+            speak("แล้วเจอกันใหม่นะเมี๊ยว", device_index=device_index)
             if os.path.exists("recorded.wav"):
                 os.remove("recorded.wav")
             break
